@@ -50,9 +50,6 @@ public class UserController {
         userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            var usr = new User();
-            usr.setRoles(Set.of(roleService.getUserRole().get()));
-            model.addAttribute("userForm", usr);
             return "registration";
         }
         userService.save(userForm);

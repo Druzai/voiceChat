@@ -156,15 +156,13 @@ window.onload = (e) => {
     mainFunction(500); // 1000
 };
 
-window.onclose = (e) => {
+window.addEventListener('beforeunload', function (e) {
     disconnect();
-}
-
-// window.refresh
+});
 
 
 function mainFunction(time) {
-    navigator.mediaDevices.getUserMedia({audio: true}).then((stream) => {
+    navigator.mediaDevices.getUserMedia({audio: true, video: false}).then((stream) => {
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecorder.start();
         let audioChunks = [];

@@ -9,7 +9,7 @@ let rec;
 if (!navigator.getUserMedia)
     navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-navigator.mediaDevices.getUserMedia({audio: true})
+navigator.mediaDevices.getUserMedia({audio: true, video: false})
     .then(stream => {
         handlerFunction(stream)
     })

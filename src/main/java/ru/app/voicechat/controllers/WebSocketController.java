@@ -31,7 +31,9 @@ public class WebSocketController {
                 if (room.isEmpty())
                     throw new NullPointerException();
                 var users = room.get().getUserList();
-                users.add(userService.findById(message.getUserId()).get());
+                var user = userService.findById(message.getUserId()).get();
+                if (users.stream().noneMatch(u -> u.equals(user)))
+                    users.add(user);
                 room.get().setUserList(users);
                 audioService.saveRoom(room.get());
                 message.setUserList(users.stream().map(User::getUsername).toList());

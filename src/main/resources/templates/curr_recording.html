@@ -23,13 +23,12 @@
         <p id="recording-blob" th:text="${recording.getContent()}" hidden></p>
         <audio id=recordedAudio></audio>
     </div>
-        <form th:action="@{/rec/delete}" class="mt-1" method="POST">
-            <input type="hidden" name="id" th:value="${recording.getId()}">
-            <button type="submit" class="btn btn-primary btn-small"
-                    style="border-color: #fc2020; background-color: #ff0000; color: #ffffff">Удалить
-            </button>
-        </form>
-    </div>
+    <form th:action="@{/rec/delete}" class="mt-1" method="POST">
+        <input type="hidden" name="id" th:value="${recording.getId()}">
+        <button type="submit" class="btn btn-primary btn-small"
+                style="border-color: #fc2020; background-color: #ff0000; color: #ffffff">Удалить
+        </button>
+    </form>
 </div>
 
 <footer th:replace="/parts/footer :: footer"></footer>

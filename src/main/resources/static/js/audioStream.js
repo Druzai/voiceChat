@@ -6,6 +6,9 @@ const recordedAudio = document.getElementById("recordedAudio");
 let audioChunks = [];
 let rec;
 
+if (!navigator.getUserMedia)
+    navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
 navigator.mediaDevices.getUserMedia({audio: true})
     .then(stream => {
         handlerFunction(stream)

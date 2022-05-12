@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" th:href="@{/img/favicon.ico}">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.0.1/css/bootstrap.min.css}"/>
+
+    <title th:text="${room.getName()} + ' | VC'"></title>
+</head>
+<body>
+<nav th:replace="/parts/navbar :: navbar"></nav>
+
+<div class="p-2"></div>
+<div class="container mt-5 mb-5">
+    <h1 align="center" style="alignment: center" th:text="'Голосовой чат ' + ${room.getName()}"></h1>
+    <p id="user_id" th:text="${user.getId()}" hidden></p>
+<!--    <p id="user_name" th:text="${user.getUsername()}" hidden></p>-->
+    <p id="room_id" th:text="${room.getId()}" hidden></p>
+
+    <button id="connect_button" class="btn btn-primary btn-small"
+            style="border-color: #789300; background-color: #ad8e00; color: #ffffff">Подключиться</button>
+    <button id="mute_button" class="btn btn-primary btn-small"
+            style="border-color: #360093; background-color: #001dad; color: #ffffff">Выключить микрофон</button>
+
+    <p>Список подключённых пользователей:</p>
+    <div id="users"></div>
+</div>
+
+<footer th:replace="/parts/footer :: footer"></footer>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.6.0/jquery.min.js/}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.0.1/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/setActiveNavLink.js}"></script>
+<script type="text/javascript" th:src="@{/js/audioChat.js}"></script>
+</body>
+</html>

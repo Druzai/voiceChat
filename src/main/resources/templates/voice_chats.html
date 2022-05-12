@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" th:href="@{/img/favicon.ico}">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.0.1/css/bootstrap.min.css}"/>
+
+    <title>Все голосовые чаты | ODE</title>
+</head>
+<body>
+<nav th:replace="/parts/navbar :: navbar"></nav>
+
+<div class="p-4"></div>
+<div class="container mb-5">
+    <h1 th:if="${voice_chats.isEmpty()}" class="text-center" style="margin-top: 50px">Нету доступных голосовых чатов!</h1>
+    <h1 th:if="${!voice_chats.isEmpty()}" class="text-center">Все доступные голосовые чаты:</h1>
+    <div th:if="${!voice_chats.isEmpty()}" th:each="vc : ${voice_chats}"
+         class="mt-2 card bg-light justify-content-center align-items-center">
+        <h2 th:text="'Название: ' + ${vc.getName()}"></h2>
+        <p th:text="'В чате людей: ' + ${vc.getUserList().stream().count()}"></p>
+        <a th:href="'/vc/'+ ${vc.getId()}">Перейти к чату</a>
+    </div>
+</div>
+
+<footer th:replace="/parts/footer :: footer"></footer>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.6.0/jquery.min.js/}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.0.1/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/setActiveNavLink.js}"></script>
+</body>
+</html>

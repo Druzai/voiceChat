@@ -30,7 +30,10 @@ public class VoiceChatApplication {
         }
         if (userRepository.findAll().isEmpty()) {
             var user = new User("admin", "P@ssw0rd");
-            user.setRoles(Set.of(new Role(1L, "ROLE_ADMIN")));
+            user.setRoles(Set.of(
+                    new Role(1L, "ROLE_ADMIN"),
+                    new Role(2L, "ROLE_USER")
+            ));
             userService.save(user);
         }
         return args -> {

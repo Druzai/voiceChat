@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="icon" th:href="@{/img/favicon.ico}">
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.0.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/chatWindow.css}"/>
 
     <title th:text="${room.getName()} + ' | VC'"></title>
 </head>
@@ -16,16 +17,24 @@
 <div class="container mt-5 mb-5">
     <h1 align="center" style="alignment: center" th:text="'Голосовой чат ' + ${room.getName()}"></h1>
     <p id="user_id" th:text="${user.getId()}" hidden></p>
-<!--    <p id="user_name" th:text="${user.getUsername()}" hidden></p>-->
+    <p id="user_name" th:text="${user.getUsername()}" hidden></p>
     <p id="room_id" th:text="${room.getId()}" hidden></p>
 
     <button id="connect_button" class="btn btn-primary btn-small"
             style="border-color: #789300; background-color: #ad8e00; color: #ffffff">Подключиться</button>
     <button id="mute_button" class="btn btn-primary btn-small"
-            style="border-color: #360093; background-color: #001dad; color: #ffffff">Выключить микрофон</button>
+            style="border-color: #14ff72; background-color: #00ad28; color: #ffffff">Включить микрофон</button>
 
     <p>Список подключённых пользователей:</p>
     <div id="users"></div>
+
+    <p align="center" style="alignment: center">Чат</p>
+    <div class="chat">
+        <div id="messages" class="messages">
+        </div>
+        <textarea id="textAreaBlock"></textarea>
+        <button id="postButton">Отправить</button>
+    </div>
 </div>
 
 <footer th:replace="/parts/footer :: footer"></footer>

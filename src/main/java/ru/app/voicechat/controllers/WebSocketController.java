@@ -47,9 +47,9 @@ public class WebSocketController {
                 message.setUserList(users.stream().map(User::getUsername).toList());
             }
             case "voice" -> {
-                var newContent = message.getAudioContent().split(";");
+                var newContent = message.getContent().split(";");
                 newContent[0] = "data:audio/ogg;";
-                message.setAudioContent(String.join("", newContent));
+                message.setContent(String.join("", newContent));
             }
         }
         return message;

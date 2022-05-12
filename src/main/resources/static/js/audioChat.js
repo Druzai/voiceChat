@@ -1,16 +1,34 @@
 const userId = parseInt(document.getElementById("user_id").innerText);
-// const userName = document.getElementById("user_name").innerText;
+const userName = document.getElementById("user_name").innerText;
 const roomId = parseInt(document.getElementById("room_id").innerText);
 const usersDiv = document.getElementById("users");
+const userLogDiv = document.getElementById("messages");
 const connectButton = document.getElementById("connect_button");
 const muteButton = document.getElementById("mute_button");
+const postButton = document.getElementById("postButton");
+const textAreaBlock = document.getElementById("textAreaBlock");
 let stompClient = null;
 let recordingState = false;
-let muteState = false;
+let muteState = true;
 let users = [];
 
 if (!navigator.getUserMedia)
     navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+function addLog(msg) {
+    let innerDiv = document.createElement('div');
+    innerDiv.innerText = msg;
+    userLogDiv.appendChild(innerDiv);
+    scrollBottom();
+}
+
+const $chat = $('.chat'),
+    $printer = $('.messages', $chat),
+    printerH = $printer.innerHeight();
+
+function scrollBottom() {
+    $printer.stop().animate({scrollTop: $printer[0].scrollHeight - printerH}, 600);
+}
 
 function connect() {
     let socket = new SockJS('/message-ws');
@@ -19,31 +37,33 @@ function connect() {
         console.log('Connected: ' + frame);
         stompClient.send("/app/send", {}, JSON.stringify({
             'userId': userId,
+            'userName': userName,
             'roomId': roomId,
             'command': "connect",
-            'audioContent': "",
+            'content': "",
             'userList': []
         }));
         stompClient.subscribe('/topic/messages', function (message) {
             let response = JSON.parse(message.body)
-            // console.log(response);
             if (response.roomId === roomId) {
-                if (response.command === "connect")
+                if (response.command === "connect") {
                     users = response.userList;
-                    // users.push(response.userName);
-                else if (response.command === "disconnect")
+                    usersDiv.innerText = users.join(", ");
+                    addLog(`${response.userName} подключился!`);
+                } else if (response.command === "disconnect") {
                     users = response.userList;
-                    // users = users.filter(u => u !== response.userName);
-                // usersDiv.innerHTML = '';
-                // for (const name in users) {
-                //     const li = document.createElement("li");
-                //     li.innerText = name;
-                //     usersDiv.append(li);
-                // }
-                usersDiv.innerText = users.join(", ");
+                    usersDiv.innerText = users.join(", ");
+                    addLog(`${response.userName} отключился!`);
+                } else if (response.command === "micOff") {
+                    addLog(`${response.userName} выключил микрофон!`);
+                } else if (response.command === "micOn") {
+                    addLog(`${response.userName} включил микрофон!`);
+                } else if (response.command === "message") {
+                    addLog(`<${response.userName}>: ${response.content}`)
+                }
                 if (response.userId !== userId && response.command === "voice") {
-                    const audio = new Audio(response.audioContent);
-                    audio.play(response.audioContent);
+                    const audio = new Audio(response.content);
+                    audio.play(response.content);
                 }
             }
         });
@@ -54,9 +74,10 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.send("/app/send", {}, JSON.stringify({
             'userId': userId,
+            'userName': userName,
             'roomId': roomId,
             'command': "disconnect",
-            'audioContent': "",
+            'content': "",
             'userList': []
         }));
         usersDiv.innerText = "";
@@ -80,22 +101,66 @@ connectButton.onclick = () => {
 }
 
 muteButton.onclick = () => {
-    if (!muteState){
+    if (!muteState) {
         console.log("Muted mic!")
         muteState = true;
         muteButton.innerText = "Включить микрофон"
-    }
-    else {
+        if (stompClient !== null)
+            stompClient.send("/app/send", {}, JSON.stringify({
+                'userId': userId,
+                'userName': userName,
+                'roomId': roomId,
+                'command': "micOff",
+                'content': "",
+                'userList': []
+            }));
+    } else {
         console.log("Unmuted mic!")
         muteState = false;
         muteButton.innerText = "Выключить микрофон"
+        if (stompClient !== null)
+            stompClient.send("/app/send", {}, JSON.stringify({
+                'userId': userId,
+                'userName': userName,
+                'roomId': roomId,
+                'command': "micOn",
+                'content': "",
+                'userList': []
+            }));
     }
 }
 
+postButton.onclick = () => {
+    textAreaBlock.value = textAreaBlock.value.replace(/^\n/gm, "")
+    if (textAreaBlock.value !== "" && stompClient !== null) {
+        stompClient.send("/app/send", {}, JSON.stringify({
+            'userId': userId,
+            'userName': userName,
+            'roomId': roomId,
+            'command': "message",
+            'content': textAreaBlock.value,
+            'userList': []
+        }));
+        textAreaBlock.value = ""
+    }
+}
+
+$(document).ready(function () {
+    $('#textAreaBlock').keypress(function (e) {
+        if (e.keyCode === 13)
+            $('#postButton').click();
+    });
+});
 
 window.onload = (e) => {
     mainFunction(500); // 1000
 };
+
+window.onclose = (e) => {
+    disconnect();
+}
+
+// window.refresh
 
 
 function mainFunction(time) {
@@ -118,13 +183,13 @@ function mainFunction(time) {
                 fileReader.onloadend = function () {
                     if (muteState)
                         return;
-                    // if (!userStatus.microphone || !userStatus.online) return;
                     const base64String = fileReader.result;
                     stompClient.send("/app/send", {}, JSON.stringify({
                         'userId': userId,
+                        'userName': userName,
                         'roomId': roomId,
                         'command': "voice",
-                        'audioContent': base64String,
+                        'content': base64String,
                         'userList': []
                     }));
                 };
@@ -141,53 +206,3 @@ function mainFunction(time) {
         }, time);
     });
 }
-
-//
-// usernameLabel.onclick = function () {
-//     usernameDiv.style.display = "block";
-//     usernameLabel.style.display = "none";
-// }
-//
-// function changeUsername() {
-//     userStatus.username = usernameInput.value;
-//     usernameLabel.innerText = userStatus.username;
-//     usernameDiv.style.display = "none";
-//     usernameLabel.style.display = "block";
-//     emitUserInformation();
-// }
-//
-// function toggleConnection(e) {
-//     userStatus.online = !userStatus.online;
-//
-//     editButtonClass(e, userStatus.online);
-//     emitUserInformation();
-// }
-//
-// function toggleMute(e) {
-//     userStatus.mute = !userStatus.mute;
-//
-//     editButtonClass(e, userStatus.mute);
-//     emitUserInformation();
-// }
-//
-// function toggleMicrophone(e) {
-//     userStatus.microphone = !userStatus.microphone;
-//     editButtonClass(e, userStatus.microphone);
-//     emitUserInformation();
-// }
-//
-//
-// function editButtonClass(target, bool) {
-//     const classList = target.classList;
-//     classList.remove("enable-btn");
-//     classList.remove("disable-btn");
-//
-//     if (bool)
-//         return classList.add("enable-btn");
-//
-//     classList.add("disable-btn");
-// }
-//
-// function emitUserInformation() {
-//     socket.emit("userInformation", userStatus);
-// }

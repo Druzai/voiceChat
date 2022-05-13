@@ -17,6 +17,7 @@ import java.util.Set;
 public class VoiceChatApplication {
     public static void main(String[] args) {
         String dbUrl = System.getenv("JDBC_DATABASE_URL");
+        System.out.println("Database url");
         System.out.println(dbUrl);
         SpringApplication.run(VoiceChatApplication.class, args);
     }

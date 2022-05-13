@@ -21,7 +21,7 @@ spring:
     basename: validation
 server:
   port: 8443
-  ssl:
-    key-store: classpath:cert.p12
-    key-store-password: password
-    key-store-type: PKCS12
+#  ssl:
+#    key-store: classpath:cert.p12
+#    key-store-password: password
+#    key-store-type: PKCS12

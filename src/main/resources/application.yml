@@ -3,9 +3,6 @@ spring:
     url: ${JDBC_DATABASE_URL}
     username: ${JDBC_DATABASE_USERNAME}
     password: ${JDBC_DATABASE_PASSWORD}
-    #    url: "jdbc:postgresql://192.168.100.34:5432/vc"
-    #    username: postgres
-    #    password: pass
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true
@@ -13,7 +10,6 @@ spring:
       ddl-auto: update
     generate-ddl: true
     database: postgresql
-    #    database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
         default_schema: vc
@@ -21,7 +17,3 @@ spring:
     basename: validation
 server:
   port: 8443
-#  ssl:
-#    key-store: classpath:cert.p12
-#    key-store-password: password
-#    key-store-type: PKCS12

@@ -10,7 +10,7 @@
     <title>Главная | VC</title>
 </head>
 <body>
-<nav th:replace="/parts/navbar :: navbar"></nav>
+<nav th:replace="parts/navbar :: navbar"></nav>
 
 <div class="p-2"></div>
 <div class="m-5 text-center">
@@ -18,7 +18,7 @@
     <h4>Voice Chat v0.0.1</h4>
 </div>
 
-<footer th:replace="/parts/footer :: footer"></footer>
+<footer th:replace="parts/footer :: footer"></footer>
 <script type="text/javascript" th:src="@{/webjars/jquery/3.6.0/jquery.min.js/}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap/5.0.1/js/bootstrap.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/setActiveNavLink.js}"></script>

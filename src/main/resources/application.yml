@@ -13,7 +13,7 @@ spring:
   messages:
     basename: validation
 server:
-  port: 443
+  port: 8443
   ssl:
     key-store: classpath:cert.p12
     key-store-password: password
